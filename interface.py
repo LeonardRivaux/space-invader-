@@ -8,7 +8,13 @@ window.overrideredirect(True)
 window.geometry(str(window.winfo_screenwidth())+"x"+str(window.winfo_screenheight()))
 window.config(bg="black")
 
-buttonQuit = Button (window , text="Quitter", fg ="blue", command=window.destroy)
-buttonQuit.pack()
+
+menubar = Menu(window)
+menuoption = Menu(menubar, tearoff=0)
+menuoption.add_command(label = "Quitter", command= window.destroy)
+menubar.add_cascade(label="Option", menu= menuoption)
+
+window.config(menu=  menubar)
+
 
 window.mainloop()
