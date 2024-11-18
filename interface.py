@@ -43,7 +43,7 @@ bullets = []
 
 #ajouter aliens
 alien_images = []
-for i in range(1, 6):  # Supposons que les images sont nommées alien1.png à alien5.png
+for i in range(1, 6):  # Supposons que les images sont nommées alien1.jpg à alien6.jpg
     alien_path = os.path.join(current_dir, f"alien{i}.jpg")
     alien_image = Image.open(alien_path).resize((80, 80))  # Ajustez la taille si nécessaireN
     alien_images.append(ImageTk.PhotoImage(alien_image))
