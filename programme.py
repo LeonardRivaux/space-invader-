@@ -1,6 +1,7 @@
 from tkinter import *
 import os
 from PIL import Image, ImageTk
+import time
 
 class Game:
     def __init__(self):
@@ -33,6 +34,69 @@ class Game:
         # Lier les commandes clavier
         self.bind_keys()
 
+    def update(self):
+        """Fonction qui met à jour l'état du jeu (vérifie les collisions, etc.)."""
+        # Vérifier les collisions
+        for bullet in self.player.bullets:
+            for alien_row in self.alien_fleet.aliens:
+                for alien in alien_row:
+                    if self.check_collision(bullet, alien):
+                        self.handle_collision(bullet, alien)
+
+        for bullet in self.player.bullets[:]:
+            bullet.update()  # Mise à jour de la position du bullet
+            if bullet.y < 0:  # Si le bullet sort du haut de l'écran
+                self.player.remove_bullet(bullet)  # Supprimer le bullet
+            else:
+                # Vérifier les collisions avec les aliens
+                for row in self.alien_fleet.aliens:
+                    for alien in row:
+                        if self.check_collision(bullet, alien):
+                            self.handle_collision(bullet, alien)
+                            self.player.remove_bullet(bullet)  # Supprimer le bullet après collision
+                            break
+
+        # Mettre à jour le jeu toutes les 30ms
+        self.canvas.after(30, self.update)
+
+
+    def check_collision(self, bullet, alien):
+        """Vérifie si un bullet entre en collision avec un alien."""
+        # Récupérer les coordonnées du bullet
+        bullet_coords = self.canvas.coords(bullet.bullet)
+        bullet_x1, bullet_y1, bullet_x2, bullet_y2 = bullet_coords
+
+        # Récupérer les coordonnées du centre de l'alien
+        alien_coords = self.canvas.coords(alien.alien)
+        alien_x, alien_y = alien_coords  # Coordonnées du centre de l'alien
+
+        # Obtenir la taille de l'image de l'alien
+        alien_width = alien.image.width()
+        alien_height = alien.image.height()
+
+        # Calculer les coins de l'alien
+        alien_x1 = alien_x - alien_width / 2
+        alien_y1 = alien_y - alien_height / 2
+        alien_x2 = alien_x + alien_width / 2
+        alien_y2 = alien_y + alien_height / 2
+
+        # Détecter la collision (vérifier si le bullet est dans les coordonnées de l'alien)
+        if (bullet_x2 >= alien_x1 and bullet_x1 <= alien_x2 and
+            bullet_y2 >= alien_y1 and bullet_y1 <= alien_y2):
+            return True
+        return False
+
+    def handle_collision(self, bullet, alien):
+        """Gère la collision : supprime l'alien et le bullet."""
+        # Supprimer l'alien et le bullet du canvas
+        self.canvas.delete(alien.alien)
+        self.canvas.delete(bullet.bullet)
+
+        # Supprimer l'alien de la liste des aliens et le bullet de la liste des tirs
+        self.alien_fleet.remove_alien(alien)
+        self.player.remove_bullet(bullet)
+        self.update()
+
     def bind_keys(self):
         """Associe les touches du clavier aux actions du joueur."""
         self.window.bind("<Left>", self.player.move_left)
@@ -41,6 +105,7 @@ class Game:
 
     def run(self):
         """Démarre le jeu."""
+        self.update()
         self.window.mainloop()
 
 
@@ -63,6 +128,10 @@ class Player:
         # Liste des tirs
         self.bullets = []
 
+        #cooldown
+        self.last_shot_time = 0
+        self.cooldown = 500  # en millisecondes
+
     def load_image(self, filename, size):
         """Charge et redimensionne une image."""
         path = os.path.join(os.path.dirname(__file__), filename)
@@ -82,10 +151,16 @@ class Player:
             self.x += self.speed
 
     def shoot(self, event):
-        """Crée un tir depuis la position du joueur."""
-        bullet = Bullet(self.game, self.x, self.y - 20)
-        self.bullets.append(bullet)
+        current_time = int(time.time() * 1000)  # Temps actuel en millisecondes
+        if current_time - self.last_shot_time >= self.cooldown:
+            bullet = Bullet(self.game, self.x, self.y - 20)
+            self.bullets.append(bullet)
+            self.last_shot_time = current_time  # Met à jour l'heure du dernier tir
 
+    def remove_bullet(self, bullet):
+        """Supprime le bullet de la liste des tirs et du canvas."""
+        self.bullets.remove(bullet)  # Retirer le bullet de la liste des bullets
+        self.canvas.delete(bullet.bullet)  # Supprimer le bullet du canvas
 class Bullet:
     def __init__(self, game, x, y):
         self.game = game
@@ -107,7 +182,10 @@ class Bullet:
         else:
             self.canvas.delete(self.bullet)
 
-
+    def update(self):
+        """Met à jour la position du bullet."""
+        self.canvas.move(self.bullet, 0, -self.speed)  # Déplace le bullet vers le haut
+        self.y -= self.speed  # Met à jour la position Y du bullet
 class Alien:
     def __init__(self, game, x, y, image):
         self.game = game
@@ -116,7 +194,6 @@ class Alien:
         self.y = y
         self.image = image
         self.alien = self.canvas.create_image(x, y, image=self.image)
-
 
 class AlienFleet:
     def __init__(self, game):
@@ -155,7 +232,17 @@ class AlienFleet:
                 alien = Alien(self.game, x, y, self.alien_images[row])
                 alien_row.append(alien)
             aliens.append(alien_row)
+        print(alien_row)
         return aliens
+    
+    def remove_alien(self, alien):
+        """Supprime un alien de la grille."""
+        # Parcourir la grille des aliens et supprimer l'alien trouvé
+        for row in self.aliens:
+            if alien in row:
+                row.remove(alien)  # Enlever l'alien de la liste de la ligne
+                self.canvas.delete(alien.alien)  # Supprimer l'alien du canvas
+                break
 
 
 # Lancer le jeu
