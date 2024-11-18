@@ -187,7 +187,8 @@ class Bullet:
         self.canvas.move(self.bullet, 0, -self.speed)  # Déplace le bullet vers le haut
         self.y -= self.speed  # Met à jour la position Y du bullet
 class Alien:
-    def __init__(self, game, x, y, image):
+    def __init__(self, game, x, y, image, score):
+        self;score = score
         self.game = game
         self.canvas = game.canvas
         self.x = x
@@ -215,8 +216,8 @@ class AlienFleet:
     def load_alien_images(self):
         """Charge les images pour les aliens."""
         alien_images = []
-        for i in range(1, 6):
-            path = os.path.join(os.path.dirname(__file__), f"alien{i}.jpg")
+        for i in range(1, 7):
+            path = os.path.join(os.path.dirname(__file__), f"alien{i}.png")
             alien_image = Image.open(path).resize((80, 80))
             alien_images.append(ImageTk.PhotoImage(alien_image))
         return alien_images
@@ -224,15 +225,14 @@ class AlienFleet:
     def create_fleet(self):
         """Crée une grille d'aliens."""
         aliens = []
-        for row in range(5):
+        for row in range(6):
             alien_row = []
             for col in range(11):
                 x = self.start_x + col * self.x_offset
                 y = self.start_y + row * self.y_offset
-                alien = Alien(self.game, x, y, self.alien_images[row])
+                alien = Alien(self.game, x, y, self.alien_images[row],10*row)
                 alien_row.append(alien)
             aliens.append(alien_row)
-        print(alien_row)
         return aliens
     
     def remove_alien(self, alien):
