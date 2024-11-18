@@ -43,22 +43,24 @@ bullets = []
 
 #ajouter aliens
 alien_images = []
-for i in range(1, 6):  # Supposons que les images sont nommées alien1.jpg à alien6.jpg
+for i in range(1, 6):  # Supposons que les images sont nommées alien1.png à alien5.png
     alien_path = os.path.join(current_dir, f"alien{i}.jpg")
     alien_image = Image.open(alien_path).resize((80, 80))  # Ajustez la taille si nécessaireN
     alien_images.append(ImageTk.PhotoImage(alien_image))
 
 # Ajouter les aliens en 5 lignes de 11 colonnes
 aliens = []
-start_x, start_y = window.winfo_screenwidth()*0.2, window.winfo_screenheight()*0.2  # Position de départ pour les aliens
-x_offset, y_offset = 100, 100  # Espacement horizontal et vertical
+start_x = window.winfo_screenwidth() * 0.15  # size
+start_y = window.winfo_screenheight() * 0.1  
+x_offset = window.winfo_screenwidth() * 0.07  
+y_offset = window.winfo_screenheight() * 0.08  
 
-for row in range(5):  # 5 lignes
+for patate in range(5):  # 5 lignes
     alien_row = []
     for col in range(11):  # 11 colonnes
         x = start_x + col * x_offset
-        y = start_y + row * y_offset
-        alien = canvas.create_image(x, y, image=alien_images[row])
+        y = start_y + patate * y_offset
+        alien = canvas.create_image(x, y, image=alien_images[patate])
         alien_row.append(alien)
     aliens.append(alien_row)
 
@@ -90,6 +92,22 @@ def move_bullet(bullet):
         canvas.delete(bullet)  # Supprimer le tir lorsqu'il sort de l'écran
         bullets.remove(bullet)
 
+
+
+def changeImage(self, imagefile=None, image=None):
+		
+		if imagefile == None and image == None:
+			return False
+			
+		if imagefile == None:
+			self.image = image
+			
+		if image == None:
+			self.image = tkinter.PhotoImage(file=imagefile)
+			
+		canvas.delete(self.imgID)
+		self.imgID = canvas.create_image((self.loc_x, self.loc_y), image=self.image)
+		return True
 # Liaison des touches du clavier
 window.bind("<Left>", move_left)
 window.bind("<Right>", move_right)

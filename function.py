@@ -50,10 +50,10 @@ for i in range(1, 6):  # Supposons que les images sont nommées alien1.png à al
 
 # Ajouter les aliens en 5 lignes de 11 colonnes
 aliens = []
-start_x = window.winfo_screenwidth() * 0.1  # size
-start_y = window.winfo_screenheight * 0.1  
-x_offset = window.winfo_screenwidth * 0.07  
-y_offset = winfo_screenheight * 0.08  
+start_x = window.winfo_screenwidth() * 0.15  # size
+start_y = window.winfo_screenheight() * 0.1  
+x_offset = window.winfo_screenwidth() * 0.07  
+y_offset = window.winfo_screenheight() * 0.08  
 
 for patate in range(5):  # 5 lignes
     alien_row = []
