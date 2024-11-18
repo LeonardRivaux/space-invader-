@@ -1,91 +1,116 @@
-import tkinter as tk
+from tkinter import *
 import random
-from PIL import Image, ImageTk
+import math
 import os
+from PIL import Image, ImageTk
 
 
-# Configuration de la fenêtre principale
-window = tk.Tk()
-window.title("Space Invader")
-window.geometry("600x600")
-window.resizable(False, False)
+
+window =Tk()
+window.title("Space Invaders")
+window.overrideredirect(True)
+window.geometry(str(window.winfo_screenwidth())+"x"+str(window.winfo_screenheight()))
+window.config(bg="black")
+
+#menubar
+menubar = Menu(window)
+menuoption = Menu(menubar, tearoff=0)
+menuoption.add_command(label = "Quitter", command= window.destroy)
+menubar.add_cascade(label="Option", menu= menuoption)
+
+window.config(menu=  menubar)
 
 # Canvas pour le jeu
-canvas = tk.Canvas(window, width=600, height=600, bg="black")
+canvas = Canvas(window, width=window.winfo_screenwidth(), height=window.winfo_screenheight(), bg="black")
 canvas.pack()
 
-# Variables de contrôle
-player_speed = 15
-enemy_speed = 5
-bullet_speed = 10
+#joueur
+current_dir = os.path.dirname(__file__)  # Dossier contenant le script
+image_path = os.path.join(current_dir, "spaceship.png")
+player_image = Image.open(image_path)  # Remplacez par le nom de votre image
+player_image = player_image.resize((70, 70))  # Ajuster la taille si nécessaire
+player_photo = ImageTk.PhotoImage(player_image)
 
-# Liste des ennemis et des tirs
-enemies = []
+# Ajouter le joueur (image)
+player = canvas.create_image(window.winfo_screenwidth()*0.5, window.winfo_screenheight()*0.9, image=player_photo)
+
+player_speed = 20
+player_x_min = 25  # Limite gauche
+player_x_max = window.winfo_screenwidth() - 25  # Limite droite
+
+bullet_speed = 10
 bullets = []
 
-# Création des ennemis
-for i in range(5):  # 5 ennemis
-    x = random.randint(50, 550)
-    y = random.randint(50, 150)
-    enemy = canvas.create_oval(x - 20, y - 20, x + 20, y + 20, fill="red")
-    enemies.append(enemy)
+#ajouter aliens
+alien_images = []
+for i in range(1, 6):  # Supposons que les images sont nommées alien1.png à alien5.png
+    alien_path = os.path.join(current_dir, f"alien{i}.jpg")
+    alien_image = Image.open(alien_path).resize((80, 80))  # Ajustez la taille si nécessaireN
+    alien_images.append(ImageTk.PhotoImage(alien_image))
+
+# Ajouter les aliens en 5 lignes de 11 colonnes
+aliens = []
+start_x = window.winfo_screenwidth() * 0.15  # size
+start_y = window.winfo_screenheight() * 0.1  
+x_offset = window.winfo_screenwidth() * 0.07  
+y_offset = window.winfo_screenheight() * 0.08  
+
+for patate in range(5):  # 5 lignes
+    alien_row = []
+    for col in range(11):  # 11 colonnes
+        x = start_x + col * x_offset
+        y = start_y + patate * y_offset
+        alien = canvas.create_image(x, y, image=alien_images[patate])
+        alien_row.append(alien)
+    aliens.append(alien_row)
+
+
 
 # Mouvement du joueur
 def move_left(event):
-    if canvas.coords(player)[0] > 0:
+    x, y = canvas.coords(player)
+    if x > player_x_min:
         canvas.move(player, -player_speed, 0)
 
 def move_right(event):
-    if canvas.coords(player)[2] < 600:
+    x, y = canvas.coords(player)
+    if x < player_x_max:
         canvas.move(player, player_speed, 0)
 
-# Tirs du joueur
 def shoot(event):
-    x1, y1, x2, y2 = canvas.coords(player)
-    bullet = canvas.create_rectangle(x1 + 20, y1 - 10, x2 - 20, y1, fill="yellow")
+    x, y = canvas.coords(player)
+    bullet = canvas.create_rectangle(x - 2, y - 10, x + 2, y, fill="red")  # Créer un rectangle rouge
     bullets.append(bullet)
+    move_bullet(bullet)
 
-# Mouvement des ennemis
-def move_enemies():
-    for enemy in enemies:
-        canvas.move(enemy, 0, enemy_speed)
-        if canvas.coords(enemy)[3] >= 600:  # Si l'ennemi atteint le bas
-            canvas.coords(enemy, random.randint(50, 550), -20)
-
-# Mouvement des tirs
-def move_bullets():
-    for bullet in bullets[:]:
+# Déplacement des tirs
+def move_bullet(bullet):
+    if canvas.coords(bullet)[1] > 0 or 1==1:  # Si le tir est encore dans l'écran
         canvas.move(bullet, 0, -bullet_speed)
-        if canvas.coords(bullet)[1] <= 0:
-            canvas.delete(bullet)
-            bullets.remove(bullet)
+        window.after(20, move_bullet, bullet)
+    else:
+        canvas.delete(bullet)  # Supprimer le tir lorsqu'il sort de l'écran
+        bullets.remove(bullet)
 
-# Collision entre tirs et ennemis
-def check_collisions():
-    for bullet in bullets[:]:
-        bullet_coords = canvas.coords(bullet)
-        for enemy in enemies[:]:
-            enemy_coords = canvas.coords(enemy)
-            if (bullet_coords[2] > enemy_coords[0] and bullet_coords[0] < enemy_coords[2] and
-                bullet_coords[3] > enemy_coords[1] and bullet_coords[1] < enemy_coords[3]):
-                # Supprimer l'ennemi et le tir
-                canvas.delete(bullet)
-                canvas.delete(enemy)
-                bullets.remove(bullet)
-                enemies.remove(enemy)
 
-# Mise à jour du jeu
-def update_game():
-    move_enemies()
-    move_bullets()
-    check_collisions()
-    window.after(50, update_game)
 
-# Liaisons clavier
+def changeImage(self, imagefile=None, image=None):
+		
+		if imagefile == None and image == None:
+			return False
+			
+		if imagefile == None:
+			self.image = image
+			
+		if image == None:
+			self.image = tkinter.PhotoImage(file=imagefile)
+			
+		canvas.delete(self.imgID)
+		self.imgID = canvas.create_image((self.loc_x, self.loc_y), image=self.image)
+		return True
+# Liaison des touches du clavier
 window.bind("<Left>", move_left)
 window.bind("<Right>", move_right)
 window.bind("<space>", shoot)
 
-# Lancement de la boucle du jeu
-update_game()
 window.mainloop()
