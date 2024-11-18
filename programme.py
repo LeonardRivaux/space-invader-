@@ -109,17 +109,23 @@ class Game:
         self.window.mainloop()
 
 
-class Player:
+class Player: 
     def __init__(self, game):
         self.game = game
         self.canvas = game.canvas
         self.image = self.load_image("spaceship.png", (100, 100))
+        self.life = self.load_image("life.png", (30, 30))
+
 
         # Position initiale
         self.x = self.game.screen_width * 0.5
-        self.y = self.game.screen_height * 0.9
+        self.y = self.game.screen_height * 0.88 
         self.speed = 20
         self.player = self.canvas.create_image(self.x, self.y, image=self.image)
+
+        self.life1 = self.canvas.create_image(self.game.screen_width * 0.93 , self.game.screen_height * 0.960, image=self.life)
+        self.life2 = self.canvas.create_image(self.game.screen_width * 0.93 + 40, self.game.screen_height * 0.960, image=self.life)
+        self.life3 = self.canvas.create_image(self.game.screen_width * 0.93 + 80, self.game.screen_height * 0.960, image=self.life)
 
         # Limites de déplacement
         self.x_min = 25
