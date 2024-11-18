@@ -4,6 +4,8 @@ import math
 import os
 from PIL import Image, ImageTk
 
+
+
 window =Tk()
 window.title("Space Invaders")
 window.overrideredirect(True)
@@ -30,7 +32,7 @@ player_image = player_image.resize((70, 70))  # Ajuster la taille si nécessaire
 player_photo = ImageTk.PhotoImage(player_image)
 
 # Ajouter le joueur (image)
-player = canvas.create_image(820, 980, image=player_photo)
+player = canvas.create_image(window.winfo_screenwidth()*0.5, window.winfo_screenheight()*0.9, image=player_photo)
 
 player_speed = 20
 player_x_min = 25  # Limite gauche
@@ -48,7 +50,7 @@ for i in range(1, 6):  # Supposons que les images sont nommées alien1.png à al
 
 # Ajouter les aliens en 5 lignes de 11 colonnes
 aliens = []
-start_x, start_y = 320, 200  # Position de départ pour les aliens
+start_x, start_y = window.winfo_screenwidth()*0.1, window.winfo_screenheight()*0.1  # Position de départ pour les aliens
 x_offset, y_offset = 100, 100  # Espacement horizontal et vertical
 
 for row in range(5):  # 5 lignes
