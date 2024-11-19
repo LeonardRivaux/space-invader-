@@ -29,8 +29,8 @@ class Game:
         self.canvas.pack()
         
         #score 
-        self.score = 0  # Score initial
-        self.score_text = self.canvas.create_text(10, self.screen_height - 20, self.screen_width *0.1 ,text="Score: 0", anchor="w", fill="white", font=("Arial", 20))
+        self.score = 0  # Score initialself
+        self.score_text = self.canvas.create_text(10, self.screen_height*0.95 , text="Score: 0", anchor="w", fill="white", font=("Arial", 20))
 
         # Initialisation des entités du jeu
         self.player = Player(self)
@@ -102,16 +102,18 @@ class Game:
     def handle_collision(self, bullet, alien):
         
         """Gère la collision : supprime l'alien et le bullet."""
+
+
+        #gère le score
+        self.score += alien.score
+        self.update_score_display()
+    
         # Supprimer l'alien et le bullet du canvas
         self.canvas.delete(alien.alien)
         self.canvas.delete(bullet.bullet)
         self.alien_fleet.remove_alien(alien)
         self.player.remove_bullet(bullet)
         self.update()
-
-        #gère le score
-        self.score += alien.score
-        self.update_score_display()
 
     def update_score_display(self):
         """Met à jour l'affichage du score."""
@@ -226,7 +228,7 @@ class Bullet:
 
 class Alien:
     def __init__(self, game, x, y, image, score):
-        self;score = score
+        self.score = score
         self.game = game
         self.canvas = game.canvas
         self.x = x
