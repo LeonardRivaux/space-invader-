@@ -64,6 +64,7 @@ class Game:
             bullet.update()
             if bullet.y > self.screen_height:  # Si le bullet sort du bas de l'écran
                 self.alien_fleet.remove_alien_bullet(bullet)  # Supprimer le bullet
+                self.canvas.delete(bullet)
             else:
                 if self.check_collision(bullet, self.player):  # Vérifier collision avec le joueur
                     self.score -= 100
@@ -72,7 +73,7 @@ class Game:
 
 
         # Mettre à jour le jeu toutes les 30ms
-        self.canvas.after(100, self.update)
+        self.canvas.after(30, self.update)
 
 
     def check_collision(self, bullet, entity):
@@ -130,13 +131,12 @@ class Game:
                 self.canvas.delete(self.player.life3)
                 self.player.vie = 2
             self.alien_fleet.remove_alien_bullet(bullet)
+            self.canvas.delete(bullet.bullet)
         else:
             # Supprimer l'alien et le bullet du canvas
-            self.canvas.delete(alien.alien)
-            self.canvas.delete(bullet.bullet)
             self.alien_fleet.remove_alien(alien)
             self.player.remove_bullet(bullet)
-            self.update()
+            
 
     def update_score_display(self):
         """Met à jour l'affichage du score."""
@@ -250,7 +250,7 @@ class Bullet:
 
     def update(self):
         """Met à jour la position du bullet."""
-        self.canvas.move(self.bullet, 0, (-self.speed))  # Déplace le bullet vers le haut
+        self.canvas.move(self.bullet, 0, -self.speed)  # Déplace le bullet vers le haut
         self.y -= self.speed  # Met à jour la position Y du bullet
             
 
@@ -324,7 +324,8 @@ class AlienFleet:
         """Supprime un bullet d'alien."""
         if bullet in self.bullets:
             self.bullets.remove(bullet)
-            self.canvas.delete(bullet)
+
+
 # Lancer le jeu
 if __name__ == "__main__":
     game = Game()
