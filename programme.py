@@ -56,6 +56,7 @@ class Game:
                     for alien in row:
                         if self.check_collision(bullet, alien):
                             self.score += alien.score
+                            self.update_score_display()
                             self.handle_collision(bullet, alien)
                             break
 
@@ -68,6 +69,7 @@ class Game:
             else:
                 if self.check_collision(bullet, self.player):  # Vérifier collision avec le joueur
                     self.score -= 100
+                    self.update_score_display()
                     self.handle_collision(bullet, "coeur")
                     break
 
