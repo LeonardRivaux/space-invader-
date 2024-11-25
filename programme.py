@@ -388,9 +388,9 @@ class Bullet:
             self.canvas.delete(self.bullet)
 
     def update(self):
-        """Met à jour la position du bullet."""
-        self.canvas.move(self.bullet, 0, -self.speed)  # Déplace le bullet vers le haut
-        self.y -= self.speed  # Met à jour la position Y du bullet
+        if self.bullet:
+            self.canvas.move(self.bullet, 0, -self.speed)  # Déplace le bullet vers le haut
+            self.y -= self.speed  # Met à jour la position Y du bullet
             
 
 class Alien:
