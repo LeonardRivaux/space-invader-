@@ -27,8 +27,21 @@ class Game:
         # Canvas pour le jeu
         self.canvas = Canvas(self.window, width=self.screen_width, height=self.screen_height, bg="black")
         self.canvas.pack()
+
+        #image press start 
+        image_path = os.path.join(os.path.dirname(__file__), "pressstart.jpg")  # Remplacez par le nom de votre image
+        image = Image.open(image_path).resize((500, 500))  # Redimensionner si nécessaire
+        self.center_image = ImageTk.PhotoImage(image)
         
 
+        # Calculer la position centrale
+        center_x = self.screen_width / 2
+        center_y = self.screen_height / 1.5
+
+        
+        # Ajouter l'image au canvas
+        self.center_image_id = self.canvas.create_image(center_x, center_y, image=self.center_image)
+        
         #score 
         self.score = 0  # Score initialself
         self.score_text = self.canvas.create_text(10, self.screen_height*0.95 , text="Score: 0", anchor="w", fill="white", font=("Arial", 20))
@@ -41,10 +54,12 @@ class Game:
 
     def start(self, event=None):
         # Lancer les tirs des aliens après l'initialisation complète
+        self.canvas.delete(self.center_image_id)
         self.start_alien_shooting()
         # Lier les commandes clavier
         self.run()
         self.bind_keys()
+
 
     def update(self):
         """Fonction qui met à jour l'état du jeu (vérifie les collisions, etc.)."""
