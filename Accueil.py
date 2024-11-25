@@ -34,7 +34,7 @@ class Accueil:
         # Créer une nouvelle fenêtre (Toplevel)
         regles_fenetre = Toplevel(self.window)
         regles_fenetre.title("Règles du jeu")
-        regles_fenetre
+        regles_fenetre.overrideredirect(1)
         regles_fenetre.geometry("400x300+50+350")
         regles_fenetre.config(bg="black")
     
