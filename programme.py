@@ -1,3 +1,5 @@
+
+
 from tkinter import *
 from tkinter import messagebox
 import os
@@ -5,7 +7,7 @@ from PIL import Image, ImageTk
 import time
 import random
 
-class SpaceInvadersGame:
+class Accueil:
     def __init__(self):
         # Initialisation de la fenêtre principale
         self.window = Tk()
@@ -33,7 +35,7 @@ class SpaceInvadersGame:
         # Créer une nouvelle fenêtre (Toplevel)
         regles_fenetre = Toplevel(self.window)
         regles_fenetre.title("Règles du jeu")
-        regles_fenetre
+        regles_fenetre.overrideredirect(1)
         regles_fenetre.geometry("400x300+50+350")
         regles_fenetre.config(bg="black")
     
@@ -49,7 +51,7 @@ class SpaceInvadersGame:
             ),
             font=("Helvetica", 12),
             justify="left",
-            bg="white",
+            bg="black",
             wraplength=380
         )
         regles_label.pack(pady=20, padx=20)
@@ -512,7 +514,6 @@ class AlienFleet:
 
 # Initialisation et démarrage
 if __name__ == "__main__":
-    jeu = SpaceInvadersGame()
+    jeu = Accueil()
     jeu.afficher_accueil()
-
    
