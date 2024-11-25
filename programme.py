@@ -32,10 +32,11 @@ class SpaceInvadersGame:
         """Affiche une fenêtre avec les règles du jeu."""
         # Créer une nouvelle fenêtre (Toplevel)
         regles_fenetre = Toplevel(self.window)
+        regles_fenetre.overrideredirect(1)
         regles_fenetre.title("Règles du jeu")
-        regles_fenetre.geometry("500x300")
+        regles_fenetre.geometry("400x300+50+350")
         regles_fenetre.config(bg="white")
-    
+        regles_fenetre.config(bg="black")
     # Ajouter un texte pour les règles
         regles_label = Label(
             regles_fenetre,
@@ -469,7 +470,7 @@ class AlienFleet:
         if bullet in self.bullets:
             self.bullets.remove(bullet)
 
-
+    
 
 # Initialisation et démarrage
 if __name__ == "__main__":
