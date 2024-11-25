@@ -147,6 +147,9 @@ class Game:
         self.score = 0  # Score initialself
         self.score_text = self.canvas.create_text(10, self.screen_height*0.95 , text="Score: 0", anchor="w", fill="white", font=("Arial", 20))
 
+        #fin
+        self.over = False
+
         # Initialisation des entités du jeu
         self.player = Player(self)
         self.alien_fleet = AlienFleet(self)
@@ -161,8 +164,7 @@ class Game:
         #mainloop
         self.window.mainloop()
 
-        #fin
-        self.over = False
+
 
     def start(self, event=None):
         if self.start == 0:
@@ -176,6 +178,9 @@ class Game:
             self.start = 1
 
     def update(self):
+
+        if self.over:  # Vérifie si le jeu est terminé
+            return
         """Fonction qui met à jour l'état du jeu (vérifie les collisions, etc.)."""
         # Vérifier les collisions bullet joueur alien
             # Vérifier les collisions entre les bullets du joueur et les aliens
@@ -255,7 +260,7 @@ class Game:
             if self.player.vie == 1:
                 self.canvas.delete(self.player.life1)
                 self.player.vie = 0
-                self.over = 1
+                self.over = True
                 image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
                 image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
@@ -285,13 +290,16 @@ class Game:
         self.window.bind("<space>", self.player.shoot)
 
     def run(self):
-        """Démarre le jeu."""
-        self.update()
+        if not self.over:
+            self.update()
+        else:
+            return
 
     def start_alien_shooting(self):
         """Fait tirer les aliens toutes les 2 secondes."""
+        if self.over:  # Vérifie si le jeu est terminé
+            return
         self.shoot_alien_bullet()
-        
         self.canvas.after(700, self.start_alien_shooting)  # Répète toutes les 2 secondes
 
     def shoot_alien_bullet(self):
@@ -382,7 +390,6 @@ class Bullet:
         if self.y > 0:
             self.canvas.move(self.bullet, 0, -self.speed)
             self.y -= self.speed
-            
             self.canvas.after(20, self.move)
         else:
             self.canvas.delete(self.bullet)
