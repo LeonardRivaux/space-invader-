@@ -58,7 +58,7 @@ class Game:
         self.window.mainloop()
 
         #fin
-        self.over = 0
+        self.over = False
 
     def start(self, event=None):
         if self.start == 0:
@@ -102,9 +102,10 @@ class Game:
                     self.handle_collision(bullet, "coeur")
                     break
 
-        if self.over == 0:
-            # Mettre à jour le jeu toutes les 30ms
-            self.canvas.after(30, self.update)
+        
+        # Mettre à jour le jeu toutes les 30ms
+        
+        self.canvas.after(30, self.update)
 
 
     def check_collision(self, bullet, entity):
@@ -150,11 +151,11 @@ class Game:
             if self.player.vie == 1:
                 self.canvas.delete(self.player.life1)
                 self.player.vie = 0
-                self.over == 1
+                self.over = 1
                 image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
-                image = Image.open(image_path).resize((500, 500))  # Redimensionner si nécessaire
+                image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
-                self.center_image_id = self.canvas.create_image(center_x, center_y, image=self.center_image)
+                self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
             if self.player.vie == 2:
                 self.canvas.delete(self.player.life2)
                 self.player.vie = 1
@@ -186,8 +187,8 @@ class Game:
     def start_alien_shooting(self):
         """Fait tirer les aliens toutes les 2 secondes."""
         self.shoot_alien_bullet()
-        if self.over == 0:
-            self.canvas.after(700, self.start_alien_shooting)  # Répète toutes les 2 secondes
+        
+        self.canvas.after(700, self.start_alien_shooting)  # Répète toutes les 2 secondes
 
     def shoot_alien_bullet(self):
         """Tire un bullet depuis un alien aléatoire."""
@@ -275,8 +276,8 @@ class Bullet:
         if self.y > 0:
             self.canvas.move(self.bullet, 0, -self.speed)
             self.y -= self.speed
-            if self.over == 0:
-                self.canvas.after(20, self.move)
+            
+            self.canvas.after(20, self.move)
         else:
             self.canvas.delete(self.bullet)
 
