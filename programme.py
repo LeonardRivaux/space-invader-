@@ -270,7 +270,7 @@ class Game:
                 self.player.vie = 0
                 self.over = True
                 image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
-                image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
+                image = Image.open(image_path).resize((671, 364))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
                 self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
                 self.fin = 1
@@ -328,7 +328,7 @@ class Game:
             self.over = True 
             banane = 1
             image_path = os.path.join(os.path.dirname(__file__), "pause.png")  # Remplacez par le nom de votre image
-            image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
+            image = Image.open(image_path).resize((600, 400))  # Redimensionner si nécessaire
             self.center_image = ImageTk.PhotoImage(image)
             self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
         if self.pause == 1:
@@ -342,7 +342,7 @@ class Game:
     def victory(self, event=None):
         self.over = True
         image_path = os.path.join(os.path.dirname(__file__), "victory.jpg")  # Remplacez par le nom de votre image
-        image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
+        image = Image.open(image_path).resize((658, 180))  # Redimensionner si nécessaire
         self.center_image = ImageTk.PhotoImage(image)
         self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
         self.fin = 1
