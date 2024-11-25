@@ -14,7 +14,6 @@ class Game:
         self.screen_height = self.window.winfo_screenheight()
         self.window.geometry(f"{self.screen_width}x{self.screen_height}")
         self.window.config(bg="black")
-        self.window.bind("<Return>",self.start)
         #menu en haut 
         #menubar
         menubar = Menu(self.window)
@@ -32,7 +31,7 @@ class Game:
         image_path = os.path.join(os.path.dirname(__file__), "pressstart.jpg")  # Remplacez par le nom de votre image
         image = Image.open(image_path).resize((500, 500))  # Redimensionner si nécessaire
         self.center_image = ImageTk.PhotoImage(image)
-        
+       
 
         # Calculer la position centrale
         center_x = self.screen_width / 2
@@ -50,16 +49,27 @@ class Game:
         self.player = Player(self)
         self.alien_fleet = AlienFleet(self)
         
+        
+        #entrer pour lancer
+        self.window.bind("<Return>",self.start)
+        self.start = 0
+
+        #mainloop
         self.window.mainloop()
 
-    def start(self, event=None):
-        # Lancer les tirs des aliens après l'initialisation complète
-        self.canvas.delete(self.center_image_id)
-        self.start_alien_shooting()
-        # Lier les commandes clavier
-        self.run()
-        self.bind_keys()
+        #fin
+        self.over = 0
 
+    def start(self, event=None):
+        if self.start == 0:
+
+            # Lancer les tirs des aliens après l'initialisation complète
+            self.canvas.delete(self.center_image_id)
+            self.start_alien_shooting()
+            # Lier les commandes clavier
+            self.run()
+            self.bind_keys()
+            self.start = 1
 
     def update(self):
         """Fonction qui met à jour l'état du jeu (vérifie les collisions, etc.)."""
@@ -92,9 +102,9 @@ class Game:
                     self.handle_collision(bullet, "coeur")
                     break
 
-
-        # Mettre à jour le jeu toutes les 30ms
-        self.canvas.after(30, self.update)
+        if self.over == 0:
+            # Mettre à jour le jeu toutes les 30ms
+            self.canvas.after(30, self.update)
 
 
     def check_collision(self, bullet, entity):
@@ -140,6 +150,11 @@ class Game:
             if self.player.vie == 1:
                 self.canvas.delete(self.player.life1)
                 self.player.vie = 0
+                self.over == 1
+                image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
+                image = Image.open(image_path).resize((500, 500))  # Redimensionner si nécessaire
+                self.center_image = ImageTk.PhotoImage(image)
+                self.center_image_id = self.canvas.create_image(center_x, center_y, image=self.center_image)
             if self.player.vie == 2:
                 self.canvas.delete(self.player.life2)
                 self.player.vie = 1
@@ -171,7 +186,8 @@ class Game:
     def start_alien_shooting(self):
         """Fait tirer les aliens toutes les 2 secondes."""
         self.shoot_alien_bullet()
-        self.canvas.after(700, self.start_alien_shooting)  # Répète toutes les 2 secondes
+        if self.over == 0:
+            self.canvas.after(700, self.start_alien_shooting)  # Répète toutes les 2 secondes
 
     def shoot_alien_bullet(self):
         """Tire un bullet depuis un alien aléatoire."""
@@ -259,7 +275,8 @@ class Bullet:
         if self.y > 0:
             self.canvas.move(self.bullet, 0, -self.speed)
             self.y -= self.speed
-            self.canvas.after(20, self.move)
+            if self.over == 0:
+                self.canvas.after(20, self.move)
         else:
             self.canvas.delete(self.bullet)
 
