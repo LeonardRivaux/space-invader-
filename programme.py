@@ -33,7 +33,7 @@ class SpaceInvadersGame:
         # Créer une nouvelle fenêtre (Toplevel)
         regles_fenetre = Toplevel(self.window)
         regles_fenetre.title("Règles du jeu")
-        regles_fenetre.geometry("400x300")
+        regles_fenetre.geometry("500x300")
         regles_fenetre.config(bg="white")
     
     # Ajouter un texte pour les règles
@@ -85,7 +85,7 @@ class SpaceInvadersGame:
 
         bouton_jouer = Button(
             accueil_frame,
-            text="Jouer",
+            text="     Jouer      ",
             font=("Helvetica", 30),
             bg="Blue",
             fg="white",
@@ -95,7 +95,7 @@ class SpaceInvadersGame:
 
         bouton_quitter = Button(
             accueil_frame,
-            text="Quitter",
+            text="    Quitter    ",
             font=("Helvetica", 30),
             bg="Blue",
             fg="white",
