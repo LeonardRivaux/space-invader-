@@ -14,7 +14,7 @@ class Game:
         self.screen_height = self.window.winfo_screenheight()
         self.window.geometry(f"{self.screen_width}x{self.screen_height}")
         self.window.config(bg="black")
-        
+        self.window.bind("<Return>",self.start)
         #menu en haut 
         #menubar
         menubar = Menu(self.window)
@@ -28,6 +28,7 @@ class Game:
         self.canvas = Canvas(self.window, width=self.screen_width, height=self.screen_height, bg="black")
         self.canvas.pack()
         
+
         #score 
         self.score = 0  # Score initialself
         self.score_text = self.canvas.create_text(10, self.screen_height*0.95 , text="Score: 0", anchor="w", fill="white", font=("Arial", 20))
@@ -36,10 +37,13 @@ class Game:
         self.player = Player(self)
         self.alien_fleet = AlienFleet(self)
         
+        self.window.mainloop()
+
+    def start(self, event=None):
         # Lancer les tirs des aliens après l'initialisation complète
         self.start_alien_shooting()
-
         # Lier les commandes clavier
+        self.run()
         self.bind_keys()
 
     def update(self):
@@ -83,7 +87,6 @@ class Game:
             # Cas spécial pour la collision avec le joueur
             entity_coords = self.canvas.coords(entity.player)
             if not entity_coords:
-                print('a')
                 return False
             entity_x, entity_y = entity_coords
             entity_width = 100  # La largeur de votre image de joueur
@@ -96,7 +99,6 @@ class Game:
             # Collision avec un alien
             entity_coords = self.canvas.coords(entity.alien)
             if not entity_coords:
-                print('b')
                 return False
             entity_x, entity_y = entity_coords
             entity_width = entity.image.width()
@@ -109,15 +111,12 @@ class Game:
     # Récupérer les coordonnées du bullet
         bullet_coords = self.canvas.coords(bullet.bullet)
         if not bullet_coords:
-            print('c')
             return False
         bullet_x1, bullet_y1, bullet_x2, bullet_y2 = bullet_coords
 
     # Détecter la collision (vérifier si le bullet est dans les coordonnées de l'entité)
         if (bullet_x2 >= entity_x1 and bullet_x1 <= entity_x2 and bullet_y2 >= entity_y1 and bullet_y1 <= entity_y2):
-            print('d')
             return True
-        print('e')
         return False
 
     def handle_collision(self, bullet, alien):
@@ -153,7 +152,6 @@ class Game:
     def run(self):
         """Démarre le jeu."""
         self.update()
-        self.window.mainloop()
 
     def start_alien_shooting(self):
         """Fait tirer les aliens toutes les 2 secondes."""
@@ -326,9 +324,7 @@ class AlienFleet:
         """Supprime un bullet d'alien."""
         if bullet in self.bullets:
             self.bullets.remove(bullet)
-
-
-# Lancer le jeu
+            
 if __name__ == "__main__":
     game = Game()
     game.run()
