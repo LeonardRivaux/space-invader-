@@ -201,7 +201,7 @@ class Game:
                             self.update_score_display()
                             self.handle_collision(bullet, alien)
                             break
-
+                          
         # Vérifier les collisions entre les bullets des aliens et le joueur
         for bullet in self.alien_fleet.bullets[:]:
             bullet.update()
@@ -214,10 +214,13 @@ class Game:
                     self.update_score_display()
                     self.handle_collision(bullet, "coeur")
                     break
-
-        
+        #verification victoire
+        remaining_aliens = sum(len(row) for row in self.alien_fleet.aliens)
+        if remaining_aliens == 0:  # Si aucune ligne n'a d'aliens restants
+            self.victory()
         # Mettre à jour le jeu toutes les 30ms
-        
+         
+
         self.canvas.after(30, self.update)
 
 
@@ -334,6 +337,14 @@ class Game:
             self.start_alien_shooting()
             self.update()
         self.pause = banane
+
+    def victory(self, event=None):
+        self.over = True
+        image_path = os.path.join(os.path.dirname(__file__), "victory.jpg")  # Remplacez par le nom de votre image
+        image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
+        self.center_image = ImageTk.PhotoImage(image)
+        self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
+        self.fin = 1
 class Player: 
     def __init__(self, game):
         self.game = game
