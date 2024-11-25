@@ -150,7 +150,7 @@ class Game:
 
         #fin
         self.over = False
-
+        self.fin = 0 
         # Initialisation des entités du jeu
         self.player = Player(self)
         self.alien_fleet = AlienFleet(self)
@@ -161,6 +161,10 @@ class Game:
         #entrer pour lancer
         self.window.bind("<Return>",self.start)
         self.start = 0
+
+        #pause
+        self.window.bind("<p>",self.pause)
+        self.pause = 0
 
         #mainloop
         self.window.mainloop()
@@ -266,6 +270,7 @@ class Game:
                 image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
                 self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
+                self.fin = 1
             if self.player.vie == 2:
                 self.canvas.delete(self.player.life2)
                 self.player.vie = 1
@@ -312,6 +317,24 @@ class Game:
 
     def leave(self, event=None):
         self.window.destroy()
+    
+    def pause(self, event=None):
+        if self.fin == 1:
+            return
+        if self.pause == 0:
+            self.over = True 
+            banane = 1
+            image_path = os.path.join(os.path.dirname(__file__), "pause.png")  # Remplacez par le nom de votre image
+            image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
+            self.center_image = ImageTk.PhotoImage(image)
+            self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
+        if self.pause == 1:
+            self.over = False
+            banane = 0
+            self.canvas.delete(self.center_image_id)
+            self.start_alien_shooting()
+            self.update()
+        self.pause = banane
 class Player: 
     def __init__(self, game):
         self.game = game
@@ -388,12 +411,14 @@ class Bullet:
 
     def move(self):
         """Déplace le tir vers le haut."""
-        if self.y > 0:
-            self.canvas.move(self.bullet, 0, -self.speed)
-            self.y -= self.speed
-            self.canvas.after(20, self.move)
-        else:
-            self.canvas.delete(self.bullet)
+        if not self.game.over:  # Vérifie si le jeu est terminé
+            if self.y > 0:
+                self.canvas.move(self.bullet, 0, -self.speed)
+                self.y -= self.speed
+            else:
+                self.canvas.delete(self.bullet)
+                return
+        self.canvas.after(20, self.move)
 
     def update(self):
         if self.bullet:
