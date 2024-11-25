@@ -93,16 +93,6 @@ class SpaceInvadersGame:
         )
         bouton_jouer.pack(pady=50)
 
-        bouton_quitter = Button(
-            accueil_frame,
-            text="Quitter",
-            font=("Helvetica", 30),
-            bg="Blue",
-            fg="white",
-            command=self.window.destroy,
-        )
-        bouton_quitter.pack(pady=50)
-
         bouton_regles = Button(
             accueil_frame,
             text="Règles du jeu",
@@ -112,6 +102,16 @@ class SpaceInvadersGame:
             command=self.afficher_regles,  # Appel à la méthode afficher_regles
         )
         bouton_regles.pack(pady=50)
+
+        bouton_quitter = Button(
+            accueil_frame,
+            text="Quitter",
+            font=("Helvetica", 30),
+            bg="Blue",
+            fg="white",
+            command=self.window.destroy,
+        )
+        bouton_quitter.pack(pady=50)
 
 
         self.window.mainloop()
@@ -124,15 +124,6 @@ class Game:
         self.screen_width = screen_width
         self.screen_height = screen_height
 
-        # Configuration du menu
-        menubar = Menu(self.window)
-        menuoption = Menu(menubar, tearoff=0)
-        menuoption.add_command(label="Quitter", command=self.window.destroy)
-        menubar.add_cascade(label="Option", menu=menuoption)
-        self.window.config(menu=menubar)
-
-
-        self.window.config(menu =  menubar)
 
         # Canvas pour le jeu
         self.canvas = canvas
@@ -160,6 +151,8 @@ class Game:
         self.player = Player(self)
         self.alien_fleet = AlienFleet(self)
         
+        #quitter
+        self.window.bind("<Escape>",self.leave)
         
         #entrer pour lancer
         self.window.bind("<Return>",self.start)
@@ -307,7 +300,9 @@ class Game:
         if alien:
             bullet = Bullet(self, alien.x, alien.y + 20, -10)  # Position sous l'alien
             self.alien_fleet.bullets.append(bullet)
-    
+
+    def leave(self, event=None):
+        self.window.destroy()
 class Player: 
     def __init__(self, game):
         self.game = game
