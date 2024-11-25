@@ -32,11 +32,10 @@ class SpaceInvadersGame:
         """Affiche une fenêtre avec les règles du jeu."""
         # Créer une nouvelle fenêtre (Toplevel)
         regles_fenetre = Toplevel(self.window)
-        regles_fenetre.overrideredirect(1)
         regles_fenetre.title("Règles du jeu")
-        regles_fenetre.geometry("400x300+50+350")
+        regles_fenetre.geometry("400x300")
         regles_fenetre.config(bg="white")
-        regles_fenetre.config(bg="black")
+    
     # Ajouter un texte pour les règles
         regles_label = Label(
             regles_fenetre,
@@ -86,23 +85,13 @@ class SpaceInvadersGame:
 
         bouton_jouer = Button(
             accueil_frame,
-            text="     Jouer      ",
+            text="Jouer",
             font=("Helvetica", 30),
             bg="Blue",
             fg="white",
             command=self.lancer_jeu,  # Appel à la fonction pour afficher le jeu
         )
         bouton_jouer.pack(pady=50)
-
-        bouton_quitter = Button(
-            accueil_frame,
-            text="    Quitter    ",
-            font=("Helvetica", 30),
-            bg="Blue",
-            fg="white",
-            command=self.window.destroy,
-        )
-        bouton_quitter.pack(pady=50)
 
         bouton_regles = Button(
             accueil_frame,
@@ -113,6 +102,16 @@ class SpaceInvadersGame:
             command=self.afficher_regles,  # Appel à la méthode afficher_regles
         )
         bouton_regles.pack(pady=50)
+
+        bouton_quitter = Button(
+            accueil_frame,
+            text="Quitter",
+            font=("Helvetica", 30),
+            bg="Blue",
+            fg="white",
+            command=self.window.destroy,
+        )
+        bouton_quitter.pack(pady=50)
 
 
         self.window.mainloop()
@@ -125,15 +124,6 @@ class Game:
         self.screen_width = screen_width
         self.screen_height = screen_height
 
-        # Configuration du menu
-        menubar = Menu(self.window)
-        menuoption = Menu(menubar, tearoff=0)
-        menuoption.add_command(label="Quitter", command=self.window.destroy)
-        menubar.add_cascade(label="Option", menu=menuoption)
-        self.window.config(menu=menubar)
-
-
-        self.window.config(menu =  menubar)
 
         # Canvas pour le jeu
         self.canvas = canvas
@@ -157,10 +147,15 @@ class Game:
         self.score = 0  # Score initialself
         self.score_text = self.canvas.create_text(10, self.screen_height*0.95 , text="Score: 0", anchor="w", fill="white", font=("Arial", 20))
 
+        #fin
+        self.over = False
+
         # Initialisation des entités du jeu
         self.player = Player(self)
         self.alien_fleet = AlienFleet(self)
         
+        #quitter
+        self.window.bind("<Escape>",self.leave)
         
         #entrer pour lancer
         self.window.bind("<Return>",self.start)
@@ -169,8 +164,7 @@ class Game:
         #mainloop
         self.window.mainloop()
 
-        #fin
-        self.over = False
+
 
     def start(self, event=None):
         if self.start == 0:
@@ -184,6 +178,9 @@ class Game:
             self.start = 1
 
     def update(self):
+
+        if self.over:  # Vérifie si le jeu est terminé
+            return
         """Fonction qui met à jour l'état du jeu (vérifie les collisions, etc.)."""
         # Vérifier les collisions bullet joueur alien
             # Vérifier les collisions entre les bullets du joueur et les aliens
@@ -263,7 +260,7 @@ class Game:
             if self.player.vie == 1:
                 self.canvas.delete(self.player.life1)
                 self.player.vie = 0
-                self.over = 1
+                self.over = True
                 image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
                 image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
@@ -293,13 +290,16 @@ class Game:
         self.window.bind("<space>", self.player.shoot)
 
     def run(self):
-        """Démarre le jeu."""
-        self.update()
+        if not self.over:
+            self.update()
+        else:
+            return
 
     def start_alien_shooting(self):
         """Fait tirer les aliens toutes les 2 secondes."""
+        if self.over:  # Vérifie si le jeu est terminé
+            return
         self.shoot_alien_bullet()
-        
         self.canvas.after(700, self.start_alien_shooting)  # Répète toutes les 2 secondes
 
     def shoot_alien_bullet(self):
@@ -308,7 +308,9 @@ class Game:
         if alien:
             bullet = Bullet(self, alien.x, alien.y + 20, -10)  # Position sous l'alien
             self.alien_fleet.bullets.append(bullet)
-    
+
+    def leave(self, event=None):
+        self.window.destroy()
 class Player: 
     def __init__(self, game):
         self.game = game
@@ -388,15 +390,14 @@ class Bullet:
         if self.y > 0:
             self.canvas.move(self.bullet, 0, -self.speed)
             self.y -= self.speed
-            
             self.canvas.after(20, self.move)
         else:
             self.canvas.delete(self.bullet)
 
     def update(self):
-        """Met à jour la position du bullet."""
-        self.canvas.move(self.bullet, 0, -self.speed)  # Déplace le bullet vers le haut
-        self.y -= self.speed  # Met à jour la position Y du bullet
+        if self.bullet:
+            self.canvas.move(self.bullet, 0, -self.speed)  # Déplace le bullet vers le haut
+            self.y -= self.speed  # Met à jour la position Y du bullet
             
 
 class Alien:
@@ -470,7 +471,7 @@ class AlienFleet:
         if bullet in self.bullets:
             self.bullets.remove(bullet)
 
-    
+
 
 # Initialisation et démarrage
 if __name__ == "__main__":
