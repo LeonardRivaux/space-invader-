@@ -1,7 +1,7 @@
 import os
 from PIL import Image, ImageTk
 from Alien import Alien
-from random import *
+import random
 
 
 class AlienFleet:
