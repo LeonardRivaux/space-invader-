@@ -21,7 +21,7 @@ class Game:
         self.canvas.pack()
 
         #image press start 
-        image_path = os.path.join(os.path.dirname(__file__), "pressstart.jpg")  # Remplacez par le nom de votre image
+        image_path = os.path.join(os.path.dirname(__file__),"img", "pressstart.jpg")  
         image = Image.open(image_path).resize((500, 500))  # Redimensionner si nécessaire
         self.center_image = ImageTk.PhotoImage(image)
        
@@ -169,7 +169,7 @@ class Game:
                 self.canvas.delete(self.player.life1)
                 self.player.vie = 0
                 self.over = True
-                image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
+                image_path = os.path.join(os.path.dirname(__file__),"img", "gameover.png")  # Remplacez par le nom de votre image
                 image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
                 self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
@@ -232,7 +232,7 @@ class Game:
                 if alien_coords and alien_coords[1] >= self.line_y:
                     self.player.vie = 0
                     self.over = True
-                    image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
+                    image_path = os.path.join(os.path.dirname(__file__),"img", "gameover.png")  # Remplacez par le nom de votre image
                     image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                     self.center_image = ImageTk.PhotoImage(image)
                     self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
@@ -249,7 +249,7 @@ class Game:
             if self.pause == 0:
                 self.over = True 
                 count = 1
-                image_path = os.path.join(os.path.dirname(__file__), "pause.png")  # Remplacez par le nom de votre image
+                image_path = os.path.join(os.path.dirname(__file__),"img", "pause.png")  # Remplacez par le nom de votre image
                 image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
                 self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
@@ -266,7 +266,7 @@ class Game:
 
     def victory(self, event=None):
         self.over = True
-        image_path = os.path.join(os.path.dirname(__file__), "victory.jpg")  # Remplacez par le nom de votre image
+        image_path = os.path.join(os.path.dirname(__file__),"img", "victory.jpg")  # Remplacez par le nom de votre image
         image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
         self.center_image = ImageTk.PhotoImage(image)
         self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)

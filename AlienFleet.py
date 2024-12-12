@@ -27,7 +27,7 @@ class AlienFleet:
         """Charge les images pour les aliens."""
         alien_images = []
         for i in range(1, 7):
-            path = os.path.join(os.path.dirname(__file__), f"alien{i}.png")
+            path = os.path.join(os.path.dirname(__file__), "img", f"alien{i}.png")
             alien_image = Image.open(path).resize((80, 80))
             alien_images.append(ImageTk.PhotoImage(alien_image))
         return alien_images

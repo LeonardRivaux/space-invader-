@@ -9,6 +9,7 @@ class Player:
     def __init__(self, game):
         self.game = game
         self.canvas = game.canvas
+        self.image_dir = "image_dir"
         self.image = self.load_image("spaceship.png", (100, 100))
         self.life = self.load_image("life.png", (30, 30))
         self.vie = 3
@@ -37,10 +38,12 @@ class Player:
         
 
     def load_image(self, filename, size):
-        """Charge et redimensionne une image."""
-        path = os.path.join(os.path.dirname(__file__), filename)
-        image = Image.open(path).resize(size)
-        return ImageTk.PhotoImage(image)
+        # Construire le chemin absolu de l'image
+        image_path = os.path.join(os.path.dirname(__file__),"img", filename)
+        # Charger et redimensionner l'image
+        img = Image.open(image_path)
+        img = img.resize(size)
+        return ImageTk.PhotoImage(img)
 
     def move_left(self, event):
         if self.game.pause ==0 and self.game.over==False:
