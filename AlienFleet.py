@@ -1,7 +1,7 @@
 import os
 from PIL import Image, ImageTk
 from Alien import Alien
-from random import random
+from random import *
 
 
 class AlienFleet:
@@ -18,6 +18,7 @@ class AlienFleet:
         self.start_y = game.screen_height * 0.1
         self.x_offset = game.screen_width * 0.07
         self.y_offset = game.screen_height * 0.08
+        self.direction = 1
 
         # Créer les aliens
         self.aliens = self.create_fleet()
@@ -44,6 +45,29 @@ class AlienFleet:
             aliens.append(alien_row)  # Ajouter la ligne complète à la liste des aliens
         return aliens
     
+    def move_aliens(self):
+        """Déplace les aliens horizontalement et les fait descendre s'ils atteignent un bord."""
+        move_down = False
+        for row in self.aliens:
+            for alien in row:
+                if alien:  # Vérifie si l'alien existe
+                    # Déplace l'alien horizontalement
+                    self.canvas.move(alien.alien, self.direction * 10, 0)
+                    alien.x += self.direction * 10
+
+                    # Vérifie si un alien atteint le bord
+                    if alien.x >= self.game.screen_width - 50 or alien.x <= 50:
+                        move_down = True
+
+        if move_down:
+            self.direction *= -1  # Change la direction
+            for row in self.aliens:
+                for alien in row:
+                    if alien:  # Vérifie si l'alien existe
+                        self.canvas.move(alien.alien, 0, 40)  # Descend l'alien
+                        alien.y += 20
+            self.game.check_line_breach()
+
     def remove_alien(self, alien):
         """Supprime un alien de la grille."""
         # Parcourir la grille des aliens et supprimer l'alien trouvé
@@ -57,7 +81,7 @@ class AlienFleet:
         """Sélectionne un alien aléatoire qui peut tirer."""
         living_aliens = [alien for row in self.aliens for alien in row if alien is not None]
         if living_aliens:
-            return random.choice(living_aliens)
+            return choice(living_aliens)
         return None
 
     def remove_alien_bullet(self, bullet):

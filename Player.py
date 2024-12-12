@@ -4,7 +4,7 @@ import os
 from PIL import Image, ImageTk
 import time
 from Bullet import Bullet
-
+from Game import *
 class Player: 
     def __init__(self, game):
         self.game = game
@@ -43,16 +43,18 @@ class Player:
         return ImageTk.PhotoImage(image)
 
     def move_left(self, event):
-        """Déplace le joueur vers la gauche."""
-        if self.x > self.x_min:
-            self.canvas.move(self.player, -self.speed, 0)
-            self.x -= self.speed
+        if self.game.pause ==0 and self.game.over==False:
+            if self.x > self.x_min:
+                self.canvas.move(self.player, -self.speed, 0)
+                self.x -= self.speed
+            
 
     def move_right(self, event):
-        """Déplace le joueur vers la droite."""
-        if self.x < self.x_max:
-            self.canvas.move(self.player, self.speed, 0)
-            self.x += self.speed
+        if self.game.pause ==0 and self.game.over==False:
+            if self.x < self.x_max:
+                self.canvas.move(self.player, self.speed, 0)
+                self.x += self.speed
+            
 
     def shoot(self, event):
         current_time = int(time.time() * 1000)  # Temps actuel en millisecondes

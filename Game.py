@@ -2,9 +2,10 @@ from tkinter import *
 import os
 from PIL import Image, ImageTk
 from random import random
-from Player import Player
-from AlienFleet import AlienFleet
-from Bullet import Bullet
+from Player import *
+from AlienFleet import *
+from Bullet import *
+import time
 
 
 class Game:
@@ -14,7 +15,7 @@ class Game:
         self.screen_width = screen_width
         self.screen_height = screen_height
 
-
+        
         # Canvas pour le jeu
         self.canvas = canvas
         self.canvas.pack()
@@ -24,6 +25,11 @@ class Game:
         image = Image.open(image_path).resize((500, 500))  # Redimensionner si nécessaire
         self.center_image = ImageTk.PhotoImage(image)
        
+        # Ajouter une ligne à 4/5 de l'écran
+        self.line_y = screen_height * 7 / 10
+        self.line_id = self.canvas.create_line(
+            0, self.line_y, screen_width, self.line_y, fill="red", width=2
+        )
 
         # Calculer la position centrale
         center_x = self.screen_width / 2
@@ -55,6 +61,9 @@ class Game:
         self.window.bind("<p>",self.pause)
         self.pause = 0
 
+        #time
+        self.time = int(time.time() * 1000)  # Temps actuel en millisecondes
+
         #mainloop
         self.window.mainloop()
 
@@ -66,13 +75,14 @@ class Game:
             # Lancer les tirs des aliens après l'initialisation complète
             self.canvas.delete(self.center_image_id)
             self.start_alien_shooting()
+            self.start_alien_movement()
             # Lier les commandes clavier
             self.run()
             self.bind_keys()
             self.start = 1
 
     def update(self):
-
+        
         if self.over:  # Vérifie si le jeu est terminé
             return
         """Fonction qui met à jour l'état du jeu (vérifie les collisions, etc.)."""
@@ -108,9 +118,10 @@ class Game:
         remaining_aliens = sum(len(row) for row in self.alien_fleet.aliens)
         if remaining_aliens == 0:  # Si aucune ligne n'a d'aliens restants
             self.victory()
-        # Mettre à jour le jeu toutes les 30ms
-         
+        #verification défaite
+        self.check_line_breach()
 
+        # Mettre à jour le jeu toutes les 30ms
         self.canvas.after(30, self.update)
 
 
@@ -200,6 +211,12 @@ class Game:
         self.shoot_alien_bullet()
         self.canvas.after(700, self.start_alien_shooting)  # Répète toutes les 2 secondes
 
+    def start_alien_movement(self):
+        """Démarre le mouvement des aliens."""
+        if not self.over and self.pause==0:  # Vérifie que le jeu n'est pas terminé
+            self.alien_fleet.move_aliens()  # Déplace les aliens
+        self.canvas.after(200, self.start_alien_movement)
+
     def shoot_alien_bullet(self):
         """Tire un bullet depuis un alien aléatoire."""
         alien = alien = self.alien_fleet.select_random_alien()
@@ -207,26 +224,45 @@ class Game:
             bullet = Bullet(self, alien.x, alien.y + 20, -10)  # Position sous l'alien
             self.alien_fleet.bullets.append(bullet)
 
+    def check_line_breach(self):
+        """Vérifie si un alien dépasse la ligne rouge."""
+        for row in self.alien_fleet.aliens:
+            for alien in row:
+                alien_coords = self.canvas.coords(alien.alien)
+                if alien_coords and alien_coords[1] >= self.line_y:
+                    self.player.vie = 0
+                    self.over = True
+                    image_path = os.path.join(os.path.dirname(__file__), "gameover.png")  # Remplacez par le nom de votre image
+                    image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
+                    self.center_image = ImageTk.PhotoImage(image)
+                    self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
+                    self.fin = 1
+
     def leave(self, event=None):
         self.window.destroy()
     
     def pause(self, event=None):
+        current_time = int(time.time() * 1000)
         if self.fin == 1:
             return
-        if self.pause == 0:
-            self.over = True 
-            banane = 1
-            image_path = os.path.join(os.path.dirname(__file__), "pause.png")  # Remplacez par le nom de votre image
-            image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
-            self.center_image = ImageTk.PhotoImage(image)
-            self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
+        if current_time - self.time >= 2000:
+            if self.pause == 0:
+                self.over = True 
+                count = 1
+                image_path = os.path.join(os.path.dirname(__file__), "pause.png")  # Remplacez par le nom de votre image
+                image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
+                self.center_image = ImageTk.PhotoImage(image)
+                self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
         if self.pause == 1:
             self.over = False
-            banane = 0
-            self.canvas.delete(self.center_image_id)
-            self.start_alien_shooting()
+            count = 0
+            self.canvas.delete(self.center_image_id)            
             self.update()
-        self.pause = banane
+            self.time = int(time.time() * 1000)  # Temps actuel en millisecondes
+            time.sleep(1)
+            self.start_alien_shooting()
+
+        self.pause = count
 
     def victory(self, event=None):
         self.over = True
