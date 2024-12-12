@@ -81,7 +81,7 @@ class AlienFleet:
         """Sélectionne un alien aléatoire qui peut tirer."""
         living_aliens = [alien for row in self.aliens for alien in row if alien is not None]
         if living_aliens:
-            return choice(living_aliens)
+            return random.choice(living_aliens)
         return None
 
     def remove_alien_bullet(self, bullet):

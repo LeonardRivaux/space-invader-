@@ -3,7 +3,7 @@ from Game import Game
 from Player import Player
 from Alien import Alien
 from AlienFleet import AlienFleet
-from random import *
+import random
 
  
 if __name__ == "__main__":
