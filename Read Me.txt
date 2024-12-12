@@ -1,0 +1,76 @@
+Space Invaders - README
+Description du projet
+
+Ce projet est une implémentation du jeu classique Space Invaders, où le joueur doit éliminer les aliens tout en évitant leurs tirs. Le jeu est développé en Python à l'aide de la bibliothèque Tkinter pour l'interface graphique et PIL pour la gestion des images.
+
+Règles du jeu:
+Le but de Space Invaders est de tuer tous les aliens avant qu'ils n'atteignent la ligne rouge. Voici les règles détaillées :
+
+Objectif : Le joueur doit éliminer tous les aliens qui se déplacent de manière descendante. Si les aliens franchissent la ligne rouge, la partie est perdue.
+   -Vies : Le joueur commence avec 3 vies. Chaque fois qu'il est touché par un tir d'un alien, il perd une vie.
+   -Tirs des aliens : Les aliens tirent des projectiles vers le joueur. Moins il y a d'aliens, plus ils tirent vite.
+   -Score : Le score augmente en fonction des aliens éliminés. Chaque ligne d'aliens éliminée rapporte un score différent :
+	10 points pour la première ligne.
+	20 points pour la deuxième ligne,
+	etc. pour les 4 autres lignes
+
+Commandes :
+Espace : tirer.
+Flèches gauche/droite : déplacer le vaisseau.
+Entrée : commencer la partie.
+P : Pause (2 secondes entre chaque pause).
+Echap: quitter
+
+Conseil : Pour ralentir l'avancée des aliens, éliminer en premier ceux qui sont au bas de l'écran et ceux sur les côtés.
+
+
+
+Todo
+
+Optimisation du gameplay : Améliorer les performances en optimisant la gestion des objets et le traitement des événements.
+
+Améliorer les effets visuels : Ajouter des animations et des effets sonores pour rendre le jeu plus dynamique.
+
+Ajout de niveaux : Implémenter différents niveaux de difficulté avec un nombre d'aliens croissant et une vitesse d'attaque plus rapide.
+
+Sauvegarde du score : Ajouter une fonctionnalité pour enregistrer le score le plus élevé.
+
+Tests et débogage : Tester le jeu sur différentes configurations pour s'assurer qu'il fonctionne sans erreurs.
+
+
+
+Détail des fichiers
+1. Accueil.py
+Ce fichier contient la classe Accueil qui gère la fenêtre d'accueil et l'interface principale du jeu. Il permet d'afficher le titre du jeu, les boutons pour commencer le jeu, afficher les règles et quitter le jeu. Voici les principales fonctionnalités :
+
+2. Game.py
+Ce fichier contient la classe Game qui gère l'ensemble du jeu. Il intègre la logique du jeu, comme l'assignement des touches, l'update de tout ce qui se passe, la gestion des collisions, et le score. C'est la classe principale où se déroule l'exécution du jeu.
+
+3. Player.py
+Ce fichier contient la classe Player qui gère les caractéristiques et les actions du joueur, comme le vaisseau et ses tirs. Il permet au joueur de se déplacer à gauche et à droite et de tirer des projectiles pour éliminer les aliens.
+
+4. AlienFleet.py
+Ce fichier contient la classe AlienFleet qui gère les aliens et leur mouvement. Les aliens sont stockés dans une liste et leur état (vivants ou morts) est mis à jour en fonction de leur position et des interactions avec les projectiles du joueur.
+
+5. Bullet.py
+Ce fichier contient la classe Bullet qui gère les projectiles tirés par le joueur. Elle permet de définir la position, la vitesse et la direction des balles ainsi que leur collision avec les aliens.
+
+6. Main.py
+fichier de lancement du jeu. 
+
+5. Aliens.py
+Définit les caractéristiques de chaque aliens indépendamment des autres : score, position (ligne , colonne), image ....
+
+Détails techniques:
+Dans ce projet, une liste est utilisée pour suivre l'état des aliens vivants et morts. Lorsqu'un alien est tué (par un tir du joueur), il est retiré de cette liste. Cela permet une gestion dynamique et efficace des aliens. Voici comment cela fonctionne :
+
+Ajout des aliens : Les aliens sont ajoutés à la liste au démarrage du jeu.
+Retrait des aliens morts : Lorsqu'un alien est touché, il est retiré de la liste, ce qui réduit le nombre d'aliens dans le jeu.
+Contrôle de l'état : La liste permet de vérifier facilement combien d'aliens restent vivants et de contrôler leur comportement pendant le jeu. 
+On déclenche la victoire si la liste est vide !
+
+Problèmes rencontrés: aucun, o nest trop fort !
+
+Lien du repository GitHub
+Vous pouvez accéder au repository complet du projet Space Invaders ici :
+https://github.com/LeonardRivaux/space-invader-.git
