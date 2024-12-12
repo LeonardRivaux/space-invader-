@@ -1,4 +1,11 @@
-from tkinter import *  # Importation des modules nécessaires pour l'interface graphique
+# Header
+'''Ce programme implémente l'écran d'accueil et les fonctionnalités principales pour lancer le jeu Space Invaders.
+Il permet de choisir entre trois actions principales :Jouer au jeu, afficher les règles détaillées, quitter l'application.'''
+
+
+
+
+from tkinter import Tk, Canvas, Toplevel, Label, Button, Frame, RAISED  # Importation des modules nécessaires pour l'interface graphique
 from PIL import Image, ImageTk  # Importation de PIL pour gérer les images
 import time
 import random
@@ -31,7 +38,7 @@ class Accueil:
         """Affiche les règles du jeu dans une fenêtre distincte"""
         regles_fenetre = Toplevel(self.window)  # Créer une nouvelle fenêtre
         regles_fenetre.title("Règles du jeu")  # Titre de la fenêtre
-        regles_fenetre.geometry("600x600+100+100")  # Dimensions de la fenêtre
+        regles_fenetre.geometry("600x600+350+50")  # Dimensions et position de la fenêtre
         regles_fenetre.config(bg="#1c1c1c")  # Fond sombre pour la fenêtre des règles
         
         # Tente d'ajouter une icône pour les règles

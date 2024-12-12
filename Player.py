@@ -1,3 +1,14 @@
+#Header
+'''La classe `Player` représente le joueur. Elle gère le vaisseau spatial du joueur, ses déplacements, ses tirs, et ses vies. 
+
+Ce programme:
+Initialise et affiche le joueur sur le canvas.
+Gère les déplacements du joueur.
+Gère les tirs du joueur.
+Gère les vies restantes.
+Charge les images pour le vaisseau et les icônes de vie.'''
+
+
 # Initialisation et démarrage
 from tkinter import *
 import os

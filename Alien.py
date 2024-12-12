@@ -7,7 +7,7 @@ class Alien:
         :param x: Position en x de l'alien (coordonnée horizontale).
         :param y: Position en y de l'alien (coordonnée verticale).
         :param image: Image qui représente l'alien.
-        :param score: Le score associé à l'alien, généralement basé sur sa position.
+        :param score: Le score associé à l'alien.
         """
         self.score = score  # Score que rapporte l'alien lorsqu'il est détruit
         self.game = game  # Référence à l'objet jeu

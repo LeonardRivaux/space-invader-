@@ -1,3 +1,15 @@
+#Header
+'''La classe AlienFleet gère la flotte d'aliens .
+
+Ce programme :
+Charge les images des aliens
+Crée la flotte
+Gère le déplacement des aliens
+Supprimme un alien spécifique après une collision ou un tir.
+Sélection aléatoire d'un alien pour tirer.
+Détection des aliens atteignant la ligne rouge.'''
+
+
 import os
 from PIL import Image, ImageTk
 from Alien import Alien

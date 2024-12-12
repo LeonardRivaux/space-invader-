@@ -1,3 +1,13 @@
+# Header
+'''La classe Bullet gère les projectiles tirés par le joueur ou les aliens. 
+
+Ce programme :
+Initialise et affichage le projectile sur le canvas.
+Gère le déplacement vertical du projectile.
+Supprimme automatique le projectile lorsqu'il sort de l'écran.
+Mets a jour la position du projectile'''
+
+
 class Bullet:
     def __init__(self, game, x, y, speed):
         """

@@ -1,4 +1,15 @@
-from tkinter import *
+#Header
+'''Ce fichier implémente la mécanique principale du jeu. Il gère les interactions entre le joueur, les aliens, et les éléments de l'environnement. 
+Ce programme :
+Crée la fenêtre de jeu et le canvas pour l'affichage.
+Gère les contrôles du joueur.
+Création et gestion d'une flotte d'aliens avec des tirs aléatoires.
+Vérifie et gère les collisions.
+Gère les scores, les vies et les conditions de victoire ou de défaite.
+Gère les événements de jeu : début, pause, fin.
+Démarre et contrôle des animations, tirs et mouvements des entités.
+Met à jour le jeu à intervalles réguliers (30ms) '''
+
 import os
 from PIL import Image, ImageTk
 from random import random
@@ -169,7 +180,7 @@ class Game:
                 self.canvas.delete(self.player.life1)
                 self.player.vie = 0
                 self.over = True
-                image_path = os.path.join(os.path.dirname(__file__),"img", "gameover.png")  # Remplacez par le nom de votre image
+                image_path = os.path.join(os.path.dirname(__file__),"img", "gameover.png")  
                 image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
                 self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
@@ -232,7 +243,7 @@ class Game:
                 if alien_coords and alien_coords[1] >= self.line_y:
                     self.player.vie = 0
                     self.over = True
-                    image_path = os.path.join(os.path.dirname(__file__),"img", "gameover.png")  # Remplacez par le nom de votre image
+                    image_path = os.path.join(os.path.dirname(__file__),"img", "gameover.png")  
                     image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                     self.center_image = ImageTk.PhotoImage(image)
                     self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
@@ -249,7 +260,7 @@ class Game:
             if self.pause == 0:
                 self.over = True 
                 count = 1
-                image_path = os.path.join(os.path.dirname(__file__),"img", "pause.png")  # Remplacez par le nom de votre image
+                image_path = os.path.join(os.path.dirname(__file__),"img", "pause.png")  
                 image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
                 self.center_image = ImageTk.PhotoImage(image)
                 self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
@@ -266,7 +277,7 @@ class Game:
 
     def victory(self, event=None):
         self.over = True
-        image_path = os.path.join(os.path.dirname(__file__),"img", "victory.jpg")  # Remplacez par le nom de votre image
+        image_path = os.path.join(os.path.dirname(__file__),"img", "victory.jpg")  
         image = Image.open(image_path).resize((300, 300))  # Redimensionner si nécessaire
         self.center_image = ImageTk.PhotoImage(image)
         self.center_image_id = self.canvas.create_image(self.screen_width / 2, self.screen_height / 2, image=self.center_image)
